@@ -2,25 +2,27 @@ import pygame as pg
 from sys import exit
 
 # Classes
+class Unit_Deployer(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pg.Surface((32,32), pg.SRCALPHA)
+
+
 class Unit(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pg.image.load('graphics/Orin03_128x128.png').convert()
         self.rect = self.image.get_rect()
 
-    # Much like in Ogre Battle, we want to be able to select a single unit
-    # No more than one unit, though it might be useful to select multiple
-    # Maybe in the future we can make such a feature,
-    # But it isn't necessary at all for this kind of RTS
-    # Should use a group for selection, thanks, documentation!
     def deselect(self):
         self.remove(selected)
         print('you deselected a unit')
+        print(selected)
 
     def select(self):
-        self.deselect()
         self.add(selected)
         print('you selected a unit')
+        print(selected)
 
     #def update(self):
 
@@ -52,9 +54,7 @@ pg.mouse.set_visible(False)
 
 # Groups
 
-unit = Unit()
 unit_group = pg.sprite.Group()
-unit_group.add(unit)
 
 selected = pg.sprite.GroupSingle()
 
@@ -71,11 +71,12 @@ while True:
         if event.type == pg.QUIT:
             pg.quit()
             exit()
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if pg.sprite.collide_rect(cursor, unit):
-                unit.select()
-            else:
-                unit.deselect()
+        #if event.type == pg.MOUSEBUTTONDOWN:
+            # Unit Selection
+            #if pg.sprite.collide_rect(cursor, unit):
+                #unit.select()
+            #else:
+                #unit.deselect()
 
     # Draw graphics
     screen.fill((25,200,146))

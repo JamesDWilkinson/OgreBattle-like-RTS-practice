@@ -6,6 +6,18 @@ class Unit_Deployer(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pg.Surface((32,32), pg.SRCALPHA)
+        self.image.fill('red3')
+        self.rect = self.image.get_rect()
+
+    def deselect(self):
+        self.remove(selected)
+        print('you deselected a unit deployer')
+        print(selected)
+
+    def select(self):
+        self.add(selected)
+        print('you selected a unit deployer')
+        print(selected)
 
 
 class Unit(pg.sprite.Sprite):
@@ -32,7 +44,7 @@ class Cursor(pg.sprite.Sprite):
         super().__init__()
         self.image = pg.Surface((32,32), pg.SRCALPHA)
         self.rect = pg.draw.polygon(
-            self.image, (255,255,255), [(0,0),(16,32),(32,16)]
+            self.image, (255, 255, 255), [(0,0),(16,32),(32,16)]
             )
 
     def update(self):
@@ -46,7 +58,7 @@ clock = pg.time.Clock()
 
 screen_width = 800
 screen_height = 400
-screen = pg.display.set_mode((screen_width, screen_height))
+screen = pg.display.set_mode((screen_width,screen_height))
 
 pg.display.set_caption('OB_like')
 
@@ -54,7 +66,11 @@ pg.mouse.set_visible(False)
 
 # Groups
 
-unit_group = pg.sprite.Group()
+unit_deployers = pg.sprite.Group()
+
+units = pg.sprite.Group()
+
+selectables = pg.sprite.Group()
 
 selected = pg.sprite.GroupSingle()
 
@@ -71,17 +87,21 @@ while True:
         if event.type == pg.QUIT:
             pg.quit()
             exit()
-        #if event.type == pg.MOUSEBUTTONDOWN:
-            # Unit Selection
-            #if pg.sprite.collide_rect(cursor, unit):
-                #unit.select()
-            #else:
-                #unit.deselect()
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if pg.mouse.get_pressed()[0]:
+                print(pg.sprite.spritecollide(cursor, selectables, False))
 
+            if pg.mouse.get_pressed()[2]:
+                unit_deployers.add(Unit_Deployer())
+                unit_deployers.sprites()[-1].rect.center = pg.mouse.get_pos()
+                unit_deployers.sprites()[-1].add(selectables)
+             
     # Draw graphics
     screen.fill((25,200,146))
-    unit_group.draw(screen)
-    unit_group.update()
+    unit_deployers.draw(screen)
+    unit_deployers.update()
+    units.draw(screen)
+    units.update()
     cursor_group.draw(screen)
     cursor_group.update()
 

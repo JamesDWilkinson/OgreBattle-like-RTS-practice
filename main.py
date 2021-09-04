@@ -8,6 +8,8 @@ unit_deployers = pg.sprite.Group()
 
 units = pg.sprite.Group()
 
+destinations = pg.sprite.GroupSingle()
+
 selected = pg.sprite.GroupSingle()
 
 # Classes
@@ -61,6 +63,30 @@ class Unit(Selectable):
 
         self.add(units)
 
+        self.destination = None
+
+        self.direction = None
+
+        self.speed = 4
+
+    def acquire_vector(self, destination):
+        print('aquire_vector')
+        self.destination = destination
+        self.direction = (pg.Vector2(destination) - pg.Vector2(self.rect.x, self.rect.y))
+        self.direction.normalize_ip()
+
+    def arrive(self):
+        self.destination = None
+
+    def update(self):
+        if self.destination:
+            print(self.destination)
+            self.rect.move_ip(self.direction.x*self.speed, self.direction.y*self.speed)
+        # move_ip(destination)
+        # Code that tells the unit if it is moving
+        # and how far it is moving
+        # and in what direction each frame
+
 
 class Cursor(pg.sprite.Sprite):
     def __init__(self):
@@ -75,7 +101,21 @@ class Cursor(pg.sprite.Sprite):
         self.rect.topleft = pg.mouse.get_pos()
 
 
+class Destination(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pg.Surface((20, 20), pg.SRCALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.center = pg.mouse.get_pos()
+        self.image.fill('green')
+
+        self.add(destinations)
+
+    def get_pos(self):
+        return (self.rect.x, self.rect.y)
+
 # Setup
+
 
 pg.init()
 clock = pg.time.Clock()
@@ -118,6 +158,8 @@ while True:
                 if selected.sprites():
                     if selected.sprites()[0] in unit_deployers:
                         selected.sprites()[0].deploy_unit()
+                    if selected.sprites()[0] in units:
+                        selected.sprites()[0].acquire_vector(Destination().get_pos())
 
     # Draw graphics
     screen.fill((25, 200, 146))

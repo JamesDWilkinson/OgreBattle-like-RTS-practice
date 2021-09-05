@@ -72,7 +72,11 @@ class Unit(Selectable):
     def acquire_vector(self, destination):
         print('aquire_vector')
         self.destination = destination
-        self.direction = (pg.Vector2(destination) - pg.Vector2(self.rect.x, self.rect.y))
+        self.direction = (
+            pg.Vector2(destination) - pg.Vector2(
+                self.rect.x, self.rect.y
+            )
+        )
         self.direction.normalize_ip()
 
     def arrive(self):
@@ -81,7 +85,10 @@ class Unit(Selectable):
     def update(self):
         if self.destination:
             print(self.destination)
-            self.rect.move_ip(self.direction.x*self.speed, self.direction.y*self.speed)
+            self.rect.move_ip(
+                self.direction.x * self.speed,
+                self.direction.y * self.speed
+            )
         # move_ip(destination)
         # Code that tells the unit if it is moving
         # and how far it is moving
@@ -159,7 +166,9 @@ while True:
                     if selected.sprites()[0] in unit_deployers:
                         selected.sprites()[0].deploy_unit()
                     if selected.sprites()[0] in units:
-                        selected.sprites()[0].acquire_vector(Destination().get_pos())
+                        selected.sprites()[0].acquire_vector(
+                            Destination().get_pos()
+                        )
 
     # Draw graphics
     screen.fill((25, 200, 146))

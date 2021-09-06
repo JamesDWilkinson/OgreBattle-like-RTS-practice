@@ -85,14 +85,19 @@ class Unit(Selectable):
     def update(self):
         if self.destination:
             print(self.destination)
+            self.direction = (
+                pg.Vector2(self.destination) - pg.Vector2(
+                    self.rect.x, self.rect.y
+                )
+            )
+            self.direction.normalize_ip()
             self.rect.move_ip(
                 self.direction.x * self.speed,
                 self.direction.y * self.speed
             )
-        # move_ip(destination)
-        # Code that tells the unit if it is moving
-        # and how far it is moving
-        # and in what direction each frame
+        if pg.sprite.spritecollideany(self, destinations):
+            pg.sprite.spritecollideany(self, destinations).kill()
+            self.arrive()
 
 
 class Cursor(pg.sprite.Sprite):

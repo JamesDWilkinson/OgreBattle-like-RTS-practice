@@ -1,6 +1,8 @@
 import pygame as pg
 from sys import exit
 
+# What should I be doing next. Oh I think I have a doc
+
 # Dynamic Groups
 selectables = pg.sprite.Group()
 
@@ -14,12 +16,13 @@ selected = pg.sprite.GroupSingle()
 
 # Classes
 
-
 class Selectable(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
         self.add(selectables)
+
+        self.ownership = None
 
     def select(self):
         self.add(selected)
@@ -45,8 +48,11 @@ class Unit_Deployer(Selectable):
         self.add(unit_deployers)
         self.rect.center = pg.mouse.get_pos()
 
+        self.ownership = None
+
     def deploy_unit(self):
         if self in selected:
+            # Instantiates a unit
             units.add(Unit((self.rect.x, self.rect.y)))
 
     def update(self):
@@ -55,7 +61,8 @@ class Unit_Deployer(Selectable):
 
 class Unit(Selectable):
     def __init__(self, starting_pos):
-        super().__init__()
+        # super().__init__()
+        Selectable.__init__(self)
 
         self.image = pg.Surface((32, 32), pg.SRCALPHA)
         self.image.fill('gray')
